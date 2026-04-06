@@ -2,10 +2,8 @@ const { IncomingForm } = require('formidable');
 const fs = require('fs');
 const path = require('path');
 
-// Disable Vercel default body parser
-export const config = {
-  api: { bodyParser: false },
-};
+const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 
 async function extractText(filePath, originalname) {
   const ext = path.extname(originalname).toLowerCase();
@@ -15,14 +13,12 @@ async function extractText(filePath, originalname) {
   }
 
   if (ext === '.pdf') {
-    const pdfParse = require('pdf-parse');
     const dataBuffer = fs.readFileSync(filePath);
     const data = await pdfParse(dataBuffer);
     return data.text;
   }
 
   if (ext === '.docx') {
-    const mammoth = require('mammoth');
     const result = await mammoth.extractRawText({ path: filePath });
     return result.value;
   }
