@@ -28,7 +28,7 @@ export default function PlagiarismChecker() {
     const minLoadTime = new Promise(resolve => setTimeout(resolve, 2000));
 
     try {
-      const fetchPromise = fetch('http://localhost:5000/api/compare', {
+      const fetchPromise = fetch('/api/compare', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text1, text2, algorithm, threshold, ngramSize }),
