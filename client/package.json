@@ -14,6 +14,7 @@
     "vite": "^8.0.4"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "axios": "^1.14.0",
     "chart.js": "^4.5.1",
     "jspdf": "^4.2.1",
