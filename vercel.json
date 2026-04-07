@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "cd client && npm install && npm run build",
+  "installCommand": "npm install && cd client && npm install",
+  "buildCommand": "cd client && npx vite build",
   "outputDirectory": "client/dist",
-  "installCommand": "cd server && npm install && cd ../client && npm install",
   "functions": {
     "api/*.js": {
       "memory": 256,
