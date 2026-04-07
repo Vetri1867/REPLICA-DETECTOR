@@ -1,83 +1,7 @@
 import { useState } from 'react';
 import LoadingOverlay from '../components/LoadingOverlay';
 
-// Simple word synonym map for humanization
-const synonyms = {
-  utilize: ['use', 'employ', 'apply'],
-  demonstrate: ['show', 'reveal', 'prove'],
-  facilitate: ['help', 'enable', 'support'],
-  implement: ['carry out', 'put into practice', 'execute'],
-  comprehensive: ['thorough', 'complete', 'detailed'],
-  significant: ['important', 'notable', 'meaningful'],
-  fundamental: ['basic', 'core', 'essential'],
-  additionally: ['also', 'plus', 'on top of that'],
-  furthermore: ['also', 'besides', 'what\'s more'],
-  moreover: ['also', 'besides', 'what\'s more'],
-  consequently: ['so', 'as a result', 'because of this'],
-  therefore: ['so', 'thus', 'that\'s why'],
-  nevertheless: ['still', 'even so', 'yet'],
-  however: ['but', 'yet', 'still'],
-  approximately: ['about', 'roughly', 'around'],
-  subsequently: ['later', 'after that', 'then'],
-  predominantly: ['mostly', 'mainly', 'largely'],
-  facilitate: ['help', 'make easier', 'allow'],
-  endeavor: ['try', 'attempt', 'effort'],
-  optimal: ['best', 'ideal', 'top'],
-  innovative: ['new', 'creative', 'fresh'],
-  leverage: ['use', 'take advantage of', 'build on'],
-  paradigm: ['model', 'pattern', 'example'],
-  methodology: ['method', 'approach', 'way'],
-  infrastructure: ['framework', 'system', 'foundation'],
-};
-
-function humanizeText(text) {
-  if (!text) return '';
-
-  let result = text;
-
-  // 1. Replace formal words with casual synonyms
-  Object.entries(synonyms).forEach(([formal, replacements]) => {
-    const regex = new RegExp(`\\b${formal}\\b`, 'gi');
-    result = result.replace(regex, () => {
-      const chosen = replacements[Math.floor(Math.random() * replacements.length)];
-      return chosen;
-    });
-  });
-
-  // 2. Vary sentence starters
-  const sentences = result.split(/(?<=[.!?])\s+/);
-  const humanized = sentences.map((sentence, i) => {
-    let s = sentence.trim();
-    if (!s) return s;
-
-    // Occasionally add conversational starters
-    if (i > 0 && Math.random() > 0.7) {
-      const starters = ['Actually, ', 'You know, ', 'Honestly, ', 'In my view, ', 'I think ', 'Really, '];
-      s = starters[Math.floor(Math.random() * starters.length)] +
-        s.charAt(0).toLowerCase() + s.slice(1);
-    }
-
-    return s;
-  });
-
-  result = humanized.join(' ');
-
-  // 3. Add slight contractions
-  result = result
-    .replace(/\bdo not\b/gi, "don't")
-    .replace(/\bcannot\b/gi, "can't")
-    .replace(/\bwill not\b/gi, "won't")
-    .replace(/\bit is\b/gi, "it's")
-    .replace(/\bthey are\b/gi, "they're")
-    .replace(/\bwe are\b/gi, "we're")
-    .replace(/\bthat is\b/gi, "that's")
-    .replace(/\bI am\b/gi, "I'm")
-    .replace(/\bwould not\b/gi, "wouldn't")
-    .replace(/\bcould not\b/gi, "couldn't")
-    .replace(/\bshould not\b/gi, "shouldn't");
-
-  return result;
-}
+// Removed mock synonyms and humanizeText function
 
 export default function AIHumanizer() {
   const [inputText, setInputText] = useState('');
@@ -85,7 +9,7 @@ export default function AIHumanizer() {
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState(null);
 
-  const handleHumanize = () => {
+  const handleHumanize = async () => {
     if (!inputText.trim() || inputText.trim().length < 20) {
       alert('Please enter at least 20 characters of text.');
       return;
@@ -95,8 +19,18 @@ export default function AIHumanizer() {
     setOutputText('');
     setStats(null);
 
-    setTimeout(() => {
-      const result = humanizeText(inputText);
+    try {
+      const response = await fetch('http://localhost:5000/api/ai/humanize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: inputText })
+      });
+
+      if (!response.ok) {
+        throw new Error('Humanize failed');
+      }
+
+      const { result } = await response.json();
 
       // Count changes
       const originalWords = inputText.split(/\s+/).length;
@@ -116,8 +50,12 @@ export default function AIHumanizer() {
         wordsModified: Math.min(wordsChanged, originalWords),
         changePercent: Math.round((Math.min(wordsChanged, originalWords) / originalWords) * 100),
       });
+    } catch (err) {
+      console.error(err);
+      alert('Failed to humanize text using AI model. Make sure server is running and API key is set.');
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   const copyToClipboard = () => {

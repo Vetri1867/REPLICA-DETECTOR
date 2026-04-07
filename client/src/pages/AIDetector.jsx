@@ -1,117 +1,14 @@
 import { useState } from 'react';
 import LoadingOverlay from '../components/LoadingOverlay';
 
-// Heuristic AI detection based on text analysis patterns
-function analyzeForAI(text) {
-  if (!text || text.trim().length < 50) {
-    return { score: 0, analysis: [], verdict: 'Need more text (min 50 chars)' };
-  }
-
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 5);
-  const words = text.split(/\s+/).filter(Boolean);
-  const analysis = [];
-  let totalScore = 0;
-
-  // 1. Sentence length uniformity (AI tends to be more uniform)
-  if (sentences.length > 2) {
-    const lengths = sentences.map(s => s.trim().split(/\s+/).length);
-    const avg = lengths.reduce((a, b) => a + b, 0) / lengths.length;
-    const variance = lengths.reduce((a, b) => a + Math.pow(b - avg, 2), 0) / lengths.length;
-    const cv = Math.sqrt(variance) / avg; // coefficient of variation
-
-    const uniformity = Math.max(0, Math.min(100, (1 - cv) * 100));
-    if (uniformity > 60) {
-      totalScore += uniformity * 0.3;
-      analysis.push({
-        metric: 'Sentence Length Uniformity',
-        score: Math.round(uniformity),
-        detail: `CV: ${cv.toFixed(2)} — AI text tends to have uniform sentence lengths`,
-        type: uniformity > 75 ? 'high' : 'moderate',
-      });
-    }
-  }
-
-  // 2. Vocabulary richness (type-token ratio)
-  const uniqueWords = new Set(words.map(w => w.toLowerCase()));
-  const ttr = uniqueWords.size / words.length;
-  const vocabFlag = ttr < 0.5;
-  if (ttr < 0.65) {
-    const vocScore = Math.max(0, (1 - ttr) * 100);
-    totalScore += vocScore * 0.2;
-    analysis.push({
-      metric: 'Vocabulary Diversity',
-      score: Math.round((1 - ttr) * 100),
-      detail: `TTR: ${ttr.toFixed(2)} — Lower diversity may indicate AI generation`,
-      type: ttr < 0.45 ? 'high' : 'moderate',
-    });
-  }
-
-  // 3. Transition word frequency
-  const transitions = ['however', 'furthermore', 'moreover', 'additionally', 'consequently',
-    'therefore', 'nevertheless', 'in conclusion', 'on the other hand', 'as a result',
-    'in addition', 'for instance', 'for example', 'in other words', 'specifically'];
-  const lowerText = text.toLowerCase();
-  const transCount = transitions.filter(t => lowerText.includes(t)).length;
-  const transRatio = transCount / Math.max(1, sentences.length);
-  if (transRatio > 0.2) {
-    const transScore = Math.min(100, transRatio * 200);
-    totalScore += transScore * 0.2;
-    analysis.push({
-      metric: 'Transition Word Density',
-      score: Math.round(transScore),
-      detail: `${transCount} transition phrases found — AI uses them heavily`,
-      type: transRatio > 0.4 ? 'high' : 'moderate',
-    });
-  }
-
-  // 4. Repetitive phrasing patterns
-  const bigrams = [];
-  for (let i = 0; i < words.length - 1; i++) {
-    bigrams.push(words[i].toLowerCase() + ' ' + words[i + 1].toLowerCase());
-  }
-  const bigramSet = new Set(bigrams);
-  const repetitionRate = 1 - (bigramSet.size / Math.max(1, bigrams.length));
-  if (repetitionRate > 0.1) {
-    const repScore = Math.min(100, repetitionRate * 300);
-    totalScore += repScore * 0.15;
-    analysis.push({
-      metric: 'Phrasing Repetition',
-      score: Math.round(repScore),
-      detail: `${Math.round(repetitionRate * 100)}% repeated bigrams — AI tends to repeat structures`,
-      type: repetitionRate > 0.25 ? 'high' : 'moderate',
-    });
-  }
-
-  // 5. Formality and consistency
-  const formalWords = ['utilize', 'demonstrate', 'facilitate', 'implement',
-    'significant', 'comprehensive', 'fundamental', 'essential'];
-  const formalCount = formalWords.filter(w => lowerText.includes(w)).length;
-  if (formalCount >= 2) {
-    const formalScore = Math.min(100, formalCount * 25);
-    totalScore += formalScore * 0.15;
-    analysis.push({
-      metric: 'Formal Language Usage',
-      score: Math.round(formalScore),
-      detail: `${formalCount} formal academic words — common in AI text`,
-      type: formalCount >= 4 ? 'high' : 'moderate',
-    });
-  }
-
-  const finalScore = Math.min(95, Math.round(totalScore));
-
-  let verdict = 'Likely Human-Written';
-  if (finalScore > 70) verdict = 'Likely AI-Generated';
-  else if (finalScore > 40) verdict = 'Possibly AI-Generated';
-
-  return { score: finalScore, analysis, verdict };
-}
+// Removed mock analyzeForAI function
 
 export default function AIDetector() {
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!text.trim() || text.trim().length < 50) {
       alert('Please enter at least 50 characters of text.');
       return;
@@ -120,12 +17,25 @@ export default function AIDetector() {
     setLoading(true);
     setResult(null);
 
-    // Simulate async processing
-    setTimeout(() => {
-      const analysis = analyzeForAI(text);
+    try {
+      const response = await fetch('http://localhost:5000/api/ai/detect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+
+      if (!response.ok) {
+        throw new Error('Analysis failed');
+      }
+
+      const analysis = await response.json();
       setResult(analysis);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to analyze text using AI models. Make sure server is running and API key is set.');
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const getScoreColor = (score) => {
