@@ -35,6 +35,20 @@ export default function PlagiarismChecker() {
       });
 
       const [res] = await Promise.all([fetchPromise, minLoadTime]);
+
+      if (!res.ok) {
+        // Try to parse error JSON from server, fall back to status text
+        let errMsg = `Server error (${res.status})`;
+        try {
+          const errData = await res.json();
+          if (errData.error) errMsg = errData.error;
+        } catch {
+          // Response wasn't JSON (e.g. server not running / proxy misconfigured)
+          errMsg = 'Could not reach the server. Make sure the backend is running on port 5000.';
+        }
+        throw new Error(errMsg);
+      }
+
       const data = await res.json();
       if (data.error) throw new Error(data.error);
 
