@@ -20,10 +20,10 @@ export default function AIHumanizer() {
     setStats(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/ai/humanize', {
+      const response = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: inputText })
+        body: JSON.stringify({ text: inputText, action: 'humanize' })
       });
 
       if (!response.ok) {

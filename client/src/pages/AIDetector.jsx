@@ -18,10 +18,10 @@ export default function AIDetector() {
     setResult(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/ai/detect', {
+      const response = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ text, action: 'detect' })
       });
 
       if (!response.ok) {
