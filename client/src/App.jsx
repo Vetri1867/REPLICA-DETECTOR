@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import PlagiarismChecker from './pages/PlagiarismChecker';
 import AIDetector from './pages/AIDetector';
@@ -18,8 +19,10 @@ function App() {
         <Route path="/ai-humanizer" element={<AIHumanizer />} />
         <Route path="/report" element={<Report />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
 
 export default App;
+
