@@ -25,14 +25,18 @@ export default function AIDetector() {
       });
 
       if (!response.ok) {
-        throw new Error('Analysis failed');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Analysis failed');
       }
 
       const analysis = await response.json();
       setResult(analysis);
     } catch (err) {
       console.error(err);
-      alert('Failed to analyze text using AI models. Make sure server is running and API key is set.');
+      // Surface the actual error message from the backend if available
+      alert(err.message === 'Analysis failed' 
+        ? 'Failed to analyze text using AI models. Make sure server is running and API key is set.'
+        : err.message);
     } finally {
       setLoading(false);
     }

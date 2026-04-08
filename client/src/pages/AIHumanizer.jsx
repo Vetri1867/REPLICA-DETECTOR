@@ -27,7 +27,8 @@ export default function AIHumanizer() {
       });
 
       if (!response.ok) {
-        throw new Error('Humanize failed');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Humanize failed');
       }
 
       const { result } = await response.json();
@@ -52,7 +53,9 @@ export default function AIHumanizer() {
       });
     } catch (err) {
       console.error(err);
-      alert('Failed to humanize text using AI model. Make sure server is running and API key is set.');
+      alert(err.message === 'Humanize failed'
+        ? 'Failed to humanize text using AI model. Make sure server is running and API key is set.'
+        : err.message);
     } finally {
       setLoading(false);
     }
