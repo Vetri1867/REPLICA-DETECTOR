@@ -58,7 +58,7 @@ export default function Home() {
       </section>
 
       {/* Stats */}
-      <section style={styles.statsGrid} className="animate-slide">
+      <section style={styles.statsGrid} className="grid-4 animate-slide">
         {stats.map((s, i) => (
           <div key={i} style={styles.statCard} className="glass-card">
             <span style={styles.statValue}>{s.value}</span>
@@ -71,7 +71,7 @@ export default function Home() {
       <section style={styles.features} className="animate-slide">
         <h2 style={styles.sectionTitle}>Powerful Features</h2>
         <p style={styles.sectionSub}>Everything you need for comprehensive content analysis</p>
-        <div style={styles.featureGrid}>
+        <div style={styles.featureGrid} className="grid-2">
           {features.map((f, i) => (
             <Link key={i} to={f.link} style={{ textDecoration: 'none' }}>
               <div style={styles.featureCard} className="glass-card">
@@ -90,7 +90,7 @@ export default function Home() {
       {/* How it works */}
       <section style={styles.howSection} className="animate-slide">
         <h2 style={styles.sectionTitle}>How It Works</h2>
-        <div style={styles.stepsGrid}>
+        <div style={styles.stepsGrid} className="grid-4">
           {[
             { step: '01', title: 'Input Text', desc: 'Paste your text or upload documents in .txt, .pdf, or .docx format' },
             { step: '02', title: 'Choose Algorithm', desc: 'Select Rabin-Karp or KMP algorithm for pattern matching' },
@@ -175,9 +175,6 @@ const styles = {
     flexWrap: 'wrap',
   },
   statsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 16,
     marginBottom: 80,
   },
   statCard: {
@@ -214,9 +211,6 @@ const styles = {
     fontSize: '1.05rem',
   },
   featureGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: 20,
   },
   featureCard: {
     padding: '32px 28px',
@@ -247,9 +241,6 @@ const styles = {
     marginBottom: 80,
   },
   stepsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 16,
   },
   stepCard: {
     padding: '28px 24px',

@@ -117,7 +117,7 @@ export default function PlagiarismChecker() {
       </div>
 
       {/* Input Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+      <div className="grid-2" style={{ marginBottom: 24 }}>
         <div className="glass-card" style={{ padding: 24 }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10, color: '#fff' }}>
             <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: '#95008A' }} /> Source Document
@@ -161,7 +161,7 @@ export default function PlagiarismChecker() {
       {results && (
         <div className="animate-in" style={{ paddingTop: 20 }}>
           {/* Score Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 20, marginBottom: 24 }}>
+          <div className="grid-sidebar" style={{ marginBottom: 24 }}>
             <div className="glass-card" style={{ padding: 32, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
               <SimilarityDoughnut value={results.combinedSimilarity || 0} label="Combined" />
               <div style={{
@@ -181,7 +181,7 @@ export default function PlagiarismChecker() {
               )}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div className="grid-2" style={{ gap: 12 }}>
               {[
                 { label: 'Overall Similarity', value: (results.overallSimilarity || 0) + '%', color: (results.overallSimilarity || 0) > 50 ? '#e74c3c' : '#2ecc71' },
                 { label: 'Algorithm (' + (results.algorithm || 'N/A') + ')', value: (results.algorithmSimilarity || 0) + '%', color: '#95008A' },

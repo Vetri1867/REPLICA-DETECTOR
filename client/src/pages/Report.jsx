@@ -173,7 +173,7 @@ export default function Report() {
       </div>
 
       {/* Summary Cards */}
-      <div style={styles.summaryGrid} className="animate-slide">
+      <div style={styles.summaryGrid} className="grid-sidebar animate-slide">
         <div style={styles.mainScore} className="glass-card">
           <SimilarityDoughnut value={results.combinedSimilarity} label="Combined Score" />
           <div style={{
@@ -186,7 +186,7 @@ export default function Report() {
           </div>
         </div>
 
-        <div style={styles.detailsCol}>
+        <div style={styles.detailsCol} className="grid-3">
           {[
             { label: 'Overall Similarity', value: `${results.overallSimilarity}%`, icon: '📈' },
             { label: `Algorithm (${results.algorithm})`, value: `${results.algorithmSimilarity}%`, icon: '⚡' },
@@ -253,9 +253,6 @@ const styles = {
     marginBottom: 32,
   },
   summaryGrid: {
-    display: 'grid',
-    gridTemplateColumns: '260px 1fr',
-    gap: 20,
     marginBottom: 24,
   },
   mainScore: {
@@ -274,9 +271,6 @@ const styles = {
     border: '1px solid',
   },
   detailsCol: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr',
-    gap: 10,
   },
   detailCard: {
     padding: '16px 18px',

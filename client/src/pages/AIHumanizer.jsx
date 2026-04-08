@@ -76,7 +76,7 @@ export default function AIHumanizer() {
         </p>
       </div>
 
-      <div style={styles.mainGrid} className="animate-slide">
+      <div style={styles.mainGrid} className="grid-2 animate-slide">
         {/* Input */}
         <div style={styles.panel} className="glass-card">
           <div style={styles.panelHeader}>
@@ -121,7 +121,7 @@ export default function AIHumanizer() {
 
       {/* Stats */}
       {stats && (
-        <div style={styles.statsGrid} className="animate-in">
+        <div style={styles.statsGrid} className="grid-4 animate-in">
           {[
             { label: 'Words Modified', value: stats.wordsModified, color: '#00D4FF' },
             { label: 'Change Ratio', value: stats.changePercent + '%', color: '#4CA1AF' },
@@ -159,9 +159,6 @@ const styles = {
     marginBottom: 32,
   },
   mainGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 20,
     marginBottom: 24,
   },
   panel: {
@@ -213,9 +210,6 @@ const styles = {
     marginBottom: 32,
   },
   statsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 12,
   },
   statCard: {
     padding: '20px 16px',

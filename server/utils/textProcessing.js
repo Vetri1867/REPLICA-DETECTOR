@@ -102,7 +102,7 @@ function ngramOverlap(text1, text2, n = 3) {
  * Sentence-wise comparison
  */
 function compareSentences(text1, text2) {
-  const stringSimilarity = require('string-similarity');
+  const natural = require('natural');
   const sentences1 = tokenizeSentences(text1);
   const sentences2 = tokenizeSentences(text2);
 
@@ -111,7 +111,7 @@ function compareSentences(text1, text2) {
   sentences1.forEach((s1, i) => {
     let bestMatch = { sentence: '', similarity: 0, index: -1 };
     sentences2.forEach((s2, j) => {
-      const sim = stringSimilarity.compareTwoStrings(s1, s2);
+      const sim = natural.DiceCoefficient(s1, s2);
       if (sim > bestMatch.similarity) {
         bestMatch = { sentence: s2, similarity: sim, index: j };
       }

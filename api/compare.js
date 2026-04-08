@@ -1,4 +1,4 @@
-const stringSimilarity = require('string-similarity');
+const natural = require('natural');
 const { rabinKarpCompare } = require('../server/algorithms/rabinKarp');
 const { kmpCompare } = require('../server/algorithms/kmp');
 const {
@@ -51,7 +51,7 @@ module.exports = (req, res) => {
     }
 
     const overallSimilarity = Math.round(
-      stringSimilarity.compareTwoStrings(processed1, processed2) * 100
+      natural.DiceCoefficient(processed1, processed2) * 100
     );
     const ngramSimilarity = Math.round(ngramOverlap(cleaned1, cleaned2, 3));
     const sentenceComparison = compareSentences(processed1, processed2);

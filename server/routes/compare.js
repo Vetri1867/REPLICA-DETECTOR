@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const stringSimilarity = require('string-similarity');
+const natural = require('natural');
 const { rabinKarpCompare } = require('../algorithms/rabinKarp');
 const { kmpCompare } = require('../algorithms/kmp');
 const {
@@ -43,7 +43,7 @@ router.post('/', (req, res) => {
 
     // String similarity (cosine-like)
     const overallSimilarity = Math.round(
-      stringSimilarity.compareTwoStrings(processed1, processed2) * 100
+      natural.DiceCoefficient(processed1, processed2) * 100
     );
 
     // N-gram overlap

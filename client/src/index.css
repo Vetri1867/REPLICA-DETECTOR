@@ -244,6 +244,12 @@ body::before {
   gap: 20px;
 }
 
+.grid-sidebar {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+}
+
 /* ━━━ ANIMATIONS ━━━ */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
@@ -319,7 +325,7 @@ body::before {
 }
 
 @media (max-width: 768px) {
-  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .grid-2, .grid-3, .grid-4, .grid-sidebar { grid-template-columns: 1fr; }
   .page { padding: 20px 16px; }
   .page-title { font-size: 1.8rem; }
 }
